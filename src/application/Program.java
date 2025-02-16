@@ -5,24 +5,22 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import db.DB;
+import db.DBIntegrityException;
 
 public class Program {
     public static void main(String[] args) {
         try (Connection conn = DB.getconnection();
                 PreparedStatement st = conn.prepareStatement(
-                        "Update seller " +
-                                "set basesalary = basesalary + ? " +
-                                "where " +
-                                "(departmentid = ?)");) {
-
-            st.setDouble(1, 200.00);
-            st.setInt(2, 2);
-
+                        "Delete from department "
+                                + "where "
+                                + "id = ?");) {
+            
+            st.setInt(1, 6);
             int rows = st.executeUpdate();
 
             System.out.println("Done! Rows affected: " + rows);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DBIntegrityException(e.getMessage());
         }
     }
 }
